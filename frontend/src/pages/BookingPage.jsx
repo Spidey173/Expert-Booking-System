@@ -5,6 +5,45 @@ import { motion } from 'framer-motion';
 import api from '../api/axios';
 import toast from 'react-hot-toast';
 
+const InputField = ({ icon: Icon, label, type, name, value, onChange, focusedField, setFocusedField, errors }) => (
+  <div className="relative z-0 w-full mb-8 group">
+    <div className={`absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none transition-colors duration-300 ${focusedField === name ? 'text-indigo-400' : 'text-secondary'}`}>
+      <Icon className="w-5 h-5" />
+    </div>
+    <input
+      type={type}
+      name={name}
+      id={name}
+      value={value}
+      onChange={onChange}
+      onFocus={() => setFocusedField(name)}
+      onBlur={() => setFocusedField(null)}
+      className={`block py-4 pl-12 pr-4 w-full text-lg text-primary bg-transparent border-b-2 appearance-none focus:outline-none focus:ring-0 transition-all duration-300 peer ${
+        errors[name] ? 'border-red-500' : 'border-border focus:border-indigo-500'
+      }`}
+      placeholder=" "
+      autoComplete="off"
+    />
+    <label
+      htmlFor={name}
+      className={`absolute text-base duration-300 transform -translate-y-8 scale-75 top-4 left-12 z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-8 ${
+        errors[name] ? 'text-red-500' : focusedField === name ? 'text-indigo-400' : 'text-secondary'
+      }`}
+    >
+      {label} <span className="text-red-500">*</span>
+    </label>
+    {errors[name] && (
+      <motion.p 
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="absolute -bottom-6 left-0 text-red-500 text-xs font-medium"
+      >
+        {errors[name]}
+      </motion.p>
+    )}
+  </div>
+);
+
 const BookingPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -75,44 +114,7 @@ const BookingPage = () => {
     }
   };
 
-  const InputField = ({ icon: Icon, label, type, name, placeholder }) => (
-    <div className="relative z-0 w-full mb-8 group">
-      <div className={`absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none transition-colors duration-300 ${focusedField === name ? 'text-indigo-400' : 'text-secondary'}`}>
-        <Icon className="w-5 h-5" />
-      </div>
-      <input
-        type={type}
-        name={name}
-        id={name}
-        value={formData[name]}
-        onChange={handleChange}
-        onFocus={() => setFocusedField(name)}
-        onBlur={() => setFocusedField(null)}
-        className={`block py-4 pl-12 pr-4 w-full text-lg text-primary bg-transparent border-b-2 appearance-none focus:outline-none focus:ring-0 transition-all duration-300 peer ${
-          errors[name] ? 'border-red-500' : 'border-border focus:border-indigo-500'
-        }`}
-        placeholder=" "
-        autoComplete="off"
-      />
-      <label
-        htmlFor={name}
-        className={`absolute text-base duration-300 transform -translate-y-8 scale-75 top-4 left-12 z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-8 ${
-          errors[name] ? 'text-red-500' : focusedField === name ? 'text-indigo-400' : 'text-secondary'
-        }`}
-      >
-        {label} <span className="text-red-500">*</span>
-      </label>
-      {errors[name] && (
-        <motion.p 
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="absolute -bottom-6 left-0 text-red-500 text-xs font-medium"
-        >
-          {errors[name]}
-        </motion.p>
-      )}
-    </div>
-  );
+
 
   return (
     <div className="max-w-[1700px] mx-auto px-6 lg:px-12 xl:px-16 2xl:px-24 py-12 lg:py-20">
@@ -144,9 +146,39 @@ const BookingPage = () => {
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-400"></div>
             
             <div className="space-y-4 pt-4">
-              <InputField icon={User} label="Full Name" type="text" name="name" />
-              <InputField icon={Mail} label="Email Address" type="email" name="email" />
-              <InputField icon={Phone} label="Phone Number" type="tel" name="phone" />
+              <InputField 
+                icon={User} 
+                label="Full Name" 
+                type="text" 
+                name="name" 
+                value={formData.name}
+                onChange={handleChange}
+                focusedField={focusedField}
+                setFocusedField={setFocusedField}
+                errors={errors}
+              />
+              <InputField 
+                icon={Mail} 
+                label="Email Address" 
+                type="email" 
+                name="email" 
+                value={formData.email}
+                onChange={handleChange}
+                focusedField={focusedField}
+                setFocusedField={setFocusedField}
+                errors={errors}
+              />
+              <InputField 
+                icon={Phone} 
+                label="Phone Number" 
+                type="tel" 
+                name="phone" 
+                value={formData.phone}
+                onChange={handleChange}
+                focusedField={focusedField}
+                setFocusedField={setFocusedField}
+                errors={errors}
+              />
 
               {/* Notes */}
               <div className="relative z-0 w-full mb-8 group mt-6">
