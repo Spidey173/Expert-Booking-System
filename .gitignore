@@ -1,0 +1,17 @@
+# Dependency directories
+node_modules/
+**/node_modules/
+
+# Production build outputs
+dist/
+**/dist/
+
+# Environment files
+.env
+*.env
+backend/.env
+frontend/.env
+
+# OS files
+.DS_Store
+Thumbs.db
